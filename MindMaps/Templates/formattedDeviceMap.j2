@@ -1,0 +1,22 @@
+{%- if to_parse_routing != 'No Routes' %}
+# Hostname: {{ inventory_hostname }}
+## Operating System: {{ device_os }}
+{%-     for vrf in to_parse_routing %}
+{%-        for address_family in to_parse_routing[vrf].address_family %}
+## VRF: {{ vrf }} Address Family: {{ address_family }}
+{%-            for route in to_parse_routing[vrf].address_family[address_family].routes %}
+### Route: {{ route }}
+#### Active: {{ to_parse_routing[vrf].address_family[address_family].routes[route].active }}
+#### Metric: {{ to_parse_routing[vrf].address_family[address_family].routes[route].metric }}
+#### Route Preference: {{ to_parse_routing[vrf].address_family[address_family].routes[route].route_preference }}
+#### Source Protocol: {{ to_parse_routing[vrf].address_family[address_family].routes[route].source_protocol }}
+{%-                for next_hop in to_parse_routing[vrf].address_family[address_family].routes[route].next_hop.next_hop_list %}
+#### Next Hop: {{ next_hop }}
+##### Outgoing Interface: {{ to_parse_routing[vrf].address_family[address_family].routes[route].next_hop.next_hop_list[next_hop].index }}
+###### Outgoing Interface: {{ to_parse_routing[vrf].address_family[address_family].routes[route].next_hop.next_hop_list[next_hop].outgoing_interface }}
+###### Outgoing Interface: {{ to_parse_routing[vrf].address_family[address_family].routes[route].next_hop.next_hop_list[next_hop].updated }}
+{%-                endfor %}
+{%-            endfor %}
+{%-        endfor %}
+{%-     endfor %}
+{%- endif %}
